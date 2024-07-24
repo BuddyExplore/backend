@@ -78,19 +78,20 @@ public class BlogController {
             responseDTO.setMessage("Error in the create blog request");
             responseDTO.setContent(null);
         }
+        else {
 
-        try {
-            blog.setPosted_date((new Date(System.currentTimeMillis())).toString());
-            blogService.addNewBlog(blog);
+            try {
+                blog.setPosted_date((new Date(System.currentTimeMillis())).toString());
+                blogService.addNewBlog(blog);
 
-            responseDTO.setCode(VarList.RSP_SUCCESS);
-            responseDTO.setMessage("Created blog");
-            responseDTO.setContent(null);
-        }
-        catch (Exception e){
-            responseDTO.setCode(VarList.RSP_FAIL);
-            responseDTO.setMessage("Failed creation blog");
-            responseDTO.setContent(null);
+                responseDTO.setCode(VarList.RSP_SUCCESS);
+                responseDTO.setMessage("Created blog");
+                responseDTO.setContent(null);
+            } catch (Exception e) {
+                responseDTO.setCode(VarList.RSP_FAIL);
+                responseDTO.setMessage("Failed creation blog");
+                responseDTO.setContent(null);
+            }
         }
 
         return ResponseEntity.ok(responseDTO);
