@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface BlogRepository extends JpaRepository<Blog, Long> {
     Optional<Blog> findById(Long id);
+
+    Blog getBlogById(long id);
 }
