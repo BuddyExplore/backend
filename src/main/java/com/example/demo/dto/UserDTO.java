@@ -19,5 +19,7 @@ public class UserDTO {
     private String email;
     private String role;
     private Boolean enabled ;
+    //password and deleted status removed
+
 //    private Boolean deleted ;
 }
