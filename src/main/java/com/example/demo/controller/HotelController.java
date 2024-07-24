@@ -93,4 +93,59 @@ public class HotelController {
         }
         return ResponseEntity.ok(responseDTO);
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<ResponseDTO> updateHotel(@RequestBody Hotel hotel){
+        if(hotel == null || hotel.getId() <0){
+            responseDTO.setCode(VarList.RSP_NOT_AUTHORISED);
+            responseDTO.setMessage("Invalid hotel data");
+            responseDTO.setContent(null);
+        }
+        else {
+            try {
+                String message = hotelService.updateHotel(hotel);
+
+                if (message.equals("Not valid")){
+                    responseDTO.setCode(VarList.RSP_NOT_AUTHORISED);
+                    responseDTO.setMessage("Invalid hotel data");
+                    responseDTO.setContent(null);
+                } else {
+                    responseDTO.setCode(VarList.RSP_SUCCESS);
+                    responseDTO.setMessage("Hotel data updated");
+                    responseDTO.setContent(null);
+                }
+            }
+            catch (Exception e){
+                responseDTO.setCode(VarList.RSP_FAIL);
+                responseDTO.setMessage("Somthing wennt wrong");
+                responseDTO.setContent(null);
+            }
+        }
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @DeleteMapping(value = "/delete/{id}")
+    public ResponseEntity<ResponseDTO> deleteHotel(@PathVariable long id){
+        if (id<0){
+            responseDTO.setCode(VarList.RSP_NOT_AUTHORISED);
+            responseDTO.setMessage("Invalid hotel id");
+            responseDTO.setContent(null);
+        }
+        else {
+            try{
+                hotelService.deleteHotelById(id);
+                responseDTO.setCode(VarList.RSP_SUCCESS);
+                responseDTO.setMessage("Hotel deleted");
+                responseDTO.setContent(null);
+            }
+            catch (Exception e){
+                responseDTO.setCode(VarList.RSP_FAIL);
+                responseDTO.setMessage("Hotel deletion faild");
+                responseDTO.setContent(null);
+            }
+        }
+        return ResponseEntity.ok(responseDTO);
+    }
+
+
 }

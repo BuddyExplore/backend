@@ -42,4 +42,33 @@ public class HotelService {
     public Hotel getHotelById(long id) {
         return hotelRepository.findByHotelId(id);
     }
+
+    public String updateHotel(Hotel hotel) {
+        Hotel currentHotel = hotelRepository.findByHotelId(hotel.getId());
+        if(hotel.getName() == null) {
+            hotel.setName(currentHotel.getName());
+        }
+        if(hotel.getAddress() == null){
+            hotel.setAddress(currentHotel.getAddress());
+        }
+        if(hotel.getContact() == null){
+            hotel.setContact(currentHotel.getContact());
+        } else if (hotel.getContact().length()<9 || hotel.getContact().length()>10) {
+            return "Not valid";
+        }
+        if(hotel.getImageUrl() == null){
+            hotel.setImageUrl(currentHotel.getImageUrl());
+        }
+
+        hotel.setBookingCount(currentHotel.getBookingCount());
+        hotel.setRating(currentHotel.getRating());
+
+        hotelRepository.save(hotel);
+
+        return "Updated";
+    }
+
+    public void deleteHotelById(long id) {
+        hotelRepository.deleteById(id);
+    }
 }
