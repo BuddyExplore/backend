@@ -1,0 +1,57 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# Ignore Maven wrapper files
+.mvn/
+mvnw
+mvnw.cmd
+
+#help file
+.HELP.md
+
+### IntelliJ IDEA ###
+.idea
+../.idea/
+*.iws
+*.iml
+*.ipr
+
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+# Ignore compiled class files
+*.class
+
+# Ignore generated sources and test sources
+generated-sources/
+generated-test-sources/
+
+# Ignore test-classes
+test-classes/
+
+# Ignore other system files (optional)
+.DS_Store
+Thumbs.db
