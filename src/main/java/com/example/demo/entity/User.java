@@ -5,10 +5,9 @@ import lombok.*;
 
 import java.util.Date;
 
-
 @Entity
 @Builder
-@Table(name="Users")
+@Table(name = "User")
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -17,7 +16,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private String id;
     private String first_name;
     private String last_name;
     private Date dob;
