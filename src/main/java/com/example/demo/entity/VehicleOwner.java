@@ -29,4 +29,6 @@ public class VehicleOwner {
     @Builder.Default
     @Column(name = "approved_status")
     private Approval approvedStatus = Approval.PENDING;
+    @Column(name = "approval_date")
+    private Date approvalDate;
 }
