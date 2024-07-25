@@ -17,9 +17,9 @@ public class VehicleOwner {
     @Id
     @Column(name = "owner_id")
     private String ownerId;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "owner_id", referencedColumnName = "id")
-    private String user;
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
     @Enumerated(EnumType.STRING)
     private Province province;
     @Column(name = "driving_license_id")
