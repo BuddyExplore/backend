@@ -33,4 +33,6 @@ public class User {
 
     @Builder.Default
     private Boolean deleted = false;
+
+
 }
