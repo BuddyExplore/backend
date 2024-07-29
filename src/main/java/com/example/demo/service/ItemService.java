@@ -2,7 +2,9 @@ package com.example.demo.service;
 
 import com.example.demo.dto.ResponseDTO;
 import com.example.demo.entity.Item;
+import com.example.demo.entity.Shop;
 import com.example.demo.repo.ItemRepository;
+import com.example.demo.repo.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,9 @@ import java.util.List;
 public class ItemService {
     @Autowired
     private ItemRepository itemRepository;
+
+    @Autowired
+    private ShopRepository shopRepository;
 
     public String addNewItem(Item item) {
         if(item.getName() == null || item.getName().isEmpty()) {
@@ -29,6 +34,16 @@ public class ItemService {
         }
         if(item.getIs_available() == null || !((item.getIs_available() == false) || (item.getIs_available() == true))) {
             return "Item availability is required";
+        }
+        if(item.getShop_id() == 0 || item.getShop_id()<0 ){
+            return "Shop id required";
+        }
+        if(item.getDescription() == null || item.getDescription().isEmpty()){
+            return "Description can't  be null";
+        }
+        Shop shop = shopRepository.getShopById(item.getShop_id());
+        if(shop == null){
+            return "Invalid shop id";
         }
         itemRepository.save(item);
         return "Item added successfully";
@@ -63,6 +78,16 @@ public class ItemService {
         }
         if(item.getIs_available() != null || !(item.getIs_available() == false) || (item.getIs_available() == true)) {
             itemToUpdate.setIs_available(item.getIs_available());
+        }
+        if(item.getShop_id() == 0 || item.getShop_id()<0 ){
+            itemToUpdate.setShop_id(item.getShop_id());
+        }
+        if(item.getDescription() == null || item.getDescription().isEmpty()){
+            itemToUpdate.setDescription(item.getDescription());
+        }
+        Shop shop = shopRepository.getShopById(item.getShop_id());
+        if(shop == null){
+            return null;
         }
 
         itemRepository.save(itemToUpdate);
