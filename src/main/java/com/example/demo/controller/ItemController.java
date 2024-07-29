@@ -20,6 +20,7 @@ public class ItemController {
     // Add new item
     @PostMapping(value = "/addItem")
     public ResponseEntity<ResponseDTO> addNewItemToCart(@RequestBody Item item) {
+        System.out.println("Creating item");
         if(item == null) {
             responseDTO.setCode(VarList.RSP_NOT_AUTHORISED);
             responseDTO.setMessage("Empty item object");
@@ -44,6 +45,7 @@ public class ItemController {
                 responseDTO.setContent(null);
             }
         }
+        System.out.println(responseDTO.getMessage());
         return ResponseEntity.ok(responseDTO);
     }
 
