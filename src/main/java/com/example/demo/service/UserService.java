@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.repo.AuthUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,10 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return authUserRepository.findAll();
+    }
+
+    public List<User> getUsersByRole(Role role) {
+        return authUserRepository.findByRole(role);
     }
 
     public User findByEmail(String email) {
