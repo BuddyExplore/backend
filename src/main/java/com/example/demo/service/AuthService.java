@@ -44,13 +44,13 @@ public class AuthService {
 
         User user = authRepository.findByEmail(loginRequest.getEmail()).orElse(null);
 
-        if (user != null && !user.getEnabled()) {
+        if(user != null && !user.getEnabled()) {
             responseDTO.setCode(VarList.RSP_FAIL);
             responseDTO.setMessage("User is disabled");
             responseDTO.setContent(null);
 
             return responseDTO;
-        } else if (user != null && user.getDeleted()) {
+        } else if(user != null && user.getDeleted()) {
             responseDTO.setCode(VarList.RSP_FAIL);
             responseDTO.setMessage("User was deleted");
             responseDTO.setContent(null);
@@ -65,7 +65,9 @@ public class AuthService {
             authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginRequest.getEmail(),
-                            loginRequest.getPassword()));
+                            loginRequest.getPassword()
+                    )
+            );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -92,17 +94,17 @@ public class AuthService {
         return responseDTO;
     }
 
-    public ResponseDTO register(User user) {
-        try {
-            if (authRepository.findByEmail(user.getEmail()).isPresent()) {
-                responseDTO.setCode(VarList.RSP_DUPLICATED);
-                responseDTO.setMessage("Email already exists");
-                throw new Exception("Email already exists");
-            }
 
-            // user.setUsername(user.getEmail());
-            // user.setDisplayName(user.getFirstname().concat("
-            // ").concat(user.getLastname()));
+    public ResponseDTO register (User user) {
+        try {
+           if(authRepository.findByEmail(user.getEmail()).isPresent()) {
+                responseDTO.setCode(VarList.RSP_DUPLICATED);
+               responseDTO.setMessage("Email already exists");
+               throw new Exception("Email already exists");
+           }
+
+            //user.setUsername(user.getEmail());
+            //user.setDisplayName(user.getFirstname().concat(" ").concat(user.getLastname()));
             user.setPassword(passwordEncoder.encode(user.getPassword()));
 
             authRepository.save(user);
@@ -116,7 +118,7 @@ public class AuthService {
             responseDTO.setMessage(e.getMessage());
             responseDTO.setContent(null);
         }
-        System.out.println(responseDTO);
+
         return responseDTO;
     }
 

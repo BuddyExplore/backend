@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.ResponseDTO;
+import com.example.demo.dto.UserDTO;
+import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
@@ -12,8 +14,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.utils.VarList;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @AllArgsConstructor
 public class UserController {
@@ -26,18 +30,51 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
 
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getAllUsers")
     public ResponseEntity<ResponseDTO> getAllUsers() {
         try {
 
             List<User> users = userService.getAllUsers();
 
+            List<UserDTO> userDTOList = new ArrayList<>();
+            System.out.println("hi");
+
+            for (User user: users) {
+                System.out.println("user: " + user.getEmail());
+                UserDTO userDTO = new UserDTO(user.getId(), user.getFirst_name(), user.getLast_name(), user.getMobile_no(), user.getEmail(), user.getRole().toString(),user.getEnabled());
+                userDTOList.add(userDTO);
+            }
+
 
 
             if(!users.isEmpty()) {
                 responseDTO.setCode(VarList.RSP_SUCCESS);
                 responseDTO.setMessage("Listing all users");
+                responseDTO.setContent(userDTOList);
+            } else {
+                responseDTO.setCode(VarList.RSP_FAIL);
+                responseDTO.setMessage("No users found");
+                responseDTO.setContent(null);
+            }
+            return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+
+        } catch (Exception e) {
+            responseDTO.setCode(VarList.RSP_ERROR);
+            responseDTO.setMessage(e.getMessage());
+            responseDTO.setContent(null);
+            return new ResponseEntity<>(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/getUsersByRole/{role}")
+    public ResponseEntity<ResponseDTO> getUsersByRole(@PathVariable Role role) {
+        try {
+            List<User> users = userService.getUsersByRole(role);
+
+            if(!users.isEmpty()) {
+                responseDTO.setCode(VarList.RSP_SUCCESS);
+                responseDTO.setMessage("Listing all users by role");
                 responseDTO.setContent(users);
             } else {
                 responseDTO.setCode(VarList.RSP_FAIL);
@@ -54,7 +91,7 @@ public class UserController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     @GetMapping("/{email}")
     public ResponseEntity<ResponseDTO> findByEmail(@PathVariable String email) {
 
@@ -79,9 +116,10 @@ public class UserController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/addUser")
     public ResponseEntity<ResponseDTO> addUser(@RequestBody User user) {
+        System.out.println("use: "+user);
         try {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             User userObj = userService.save(user);
@@ -103,6 +141,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{email}")
     public ResponseEntity<ResponseDTO> updateUsers(@PathVariable String email, @RequestBody User user) {
+
         try {
 
             User savedUser = userService.updateUser(email, user);

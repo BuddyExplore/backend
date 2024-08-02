@@ -58,10 +58,12 @@ public class SecurityConfig {
                                         "/addUser",
                                         "/updateUser",
                                         "/deleteUser",
-                                        "/error"
+                                        "/error",
+                                        "/users/allusers",
+                                        "/**"
                                 )
                                 .permitAll()
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                         )
                 //* Making the session management stateless, no cookies will be saved
                 .sessionManagement

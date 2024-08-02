@@ -5,8 +5,6 @@ import lombok.*;
 
 import java.util.Date;
 
-import org.hibernate.annotations.GenericGenerator;
-
 @Entity
 @Builder
 @Table(name = "User")
@@ -14,16 +12,15 @@ import org.hibernate.annotations.GenericGenerator;
 @AllArgsConstructor
 @Setter
 @Getter
+@Data
 public class User {
 
     @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
     private String first_name;
     private String last_name;
-    private Date dob;
-    private String gender;
+    private String mobile_no;
     private String email;
     private String password;
 
@@ -35,4 +32,5 @@ public class User {
 
     @Builder.Default
     private Boolean deleted = false;
+
 }

@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.repo.AuthUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,10 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return authUserRepository.findAll();
+    }
+
+    public List<User> getUsersByRole(Role role) {
+        return authUserRepository.findByRole(role);
     }
 
     public User findByEmail(String email) {
@@ -43,11 +48,8 @@ public class UserService {
             if (newUser.getLast_name() != null && !newUser.getLast_name().isEmpty()) {
                 user.setLast_name(newUser.getLast_name());
             }
-            if (newUser.getDob() != null) {
-                user.setDob(newUser.getDob());
-            }
-            if (newUser.getGender() != null && !newUser.getGender().isEmpty()) {
-                user.setGender(newUser.getGender());
+            if (newUser.getMobile_no() != null && !newUser.getMobile_no().isEmpty()) {
+                user.setMobile_no(newUser.getMobile_no());
             }
             if (newUser.getEmail() != null && !newUser.getEmail().isEmpty()) {
                 user.setEmail(newUser.getEmail());
