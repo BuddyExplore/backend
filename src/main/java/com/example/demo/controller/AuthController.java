@@ -18,13 +18,14 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<ResponseDTO> registerUser(@RequestBody User user) {
-        //System.out.println(user.getDob());
-        //System.out.println(user.getFirst_name());
-        //System.out.println(user.getLast_name());
-        //System.out.println(user.getRole());
+        // System.out.println(user.getDob());
+        // System.out.println(user.getFirst_name());
+        // System.out.println(user.getLast_name());
+        // System.out.println(user.getRole());
         return ResponseEntity.ok(authService.register(user));
     }
 
+    @CrossOrigin(origins = "http://localhost:8081")
     @PostMapping("/login")
     public ResponseEntity<ResponseDTO> userLogin(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(authService.login(loginRequest));
