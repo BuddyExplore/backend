@@ -40,4 +40,35 @@ public class VehicleController {
         }
     }
 
+    @PostMapping(value = "/addVehicle")
+    public ResponseEntity<ResponseDTO> addNewVehicle(@RequestBody Vehicle vehicle) {
+        System.out.println("Creating vehicle");
+        if(vehicle == null) {
+            responseDTO.setCode(VarList.RSP_NOT_AUTHORISED);
+            responseDTO.setMessage("Empty vehicle object");
+            responseDTO.setContent(null);
+        }
+        else {
+            try {
+                String message = vehicleService.addNewVehicle(vehicle);
+                if(message != "Vehicle added successfully") {
+                    responseDTO.setCode(VarList.RSP_FAIL);
+                    responseDTO.setMessage(message);
+                    responseDTO.setContent(null);
+                }
+                else {
+                    responseDTO.setCode(VarList.RSP_FAIL);
+                    responseDTO.setMessage(message);
+                    responseDTO.setContent(null);
+                }
+            } catch (Exception e) {
+                responseDTO.setCode(VarList.RSP_ERROR);
+                responseDTO.setMessage(e.getMessage());
+                responseDTO.setContent(null);
+            }
+        }
+        System.out.println(responseDTO.getMessage());
+        return ResponseEntity.ok(responseDTO);
+    }
+
 }

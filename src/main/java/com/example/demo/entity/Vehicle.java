@@ -16,6 +16,7 @@ public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
     private long driver_id;
     private String type;
     private String vehicle_brand;
