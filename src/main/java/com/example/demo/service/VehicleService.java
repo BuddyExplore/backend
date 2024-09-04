@@ -25,10 +25,10 @@ public class VehicleService {
         return vehicles;
     }
 
-//    public List<Vehicle> getDriverVehicles(long driverId) {
-//        List<Vehicle> vehicles = vehicleRepository.findByDriverId(driverId);
-//        return vehicles;
-//    }
+   public List<Vehicle> getDriverVehicles(long driverId) {
+       List<Vehicle> vehicles = vehicleRepository.findByDriverId(driverId);
+       return vehicles;
+   }
 
     public void deleteVehicle(long vehicleId) {
         vehicleRepository.deleteById(vehicleId);

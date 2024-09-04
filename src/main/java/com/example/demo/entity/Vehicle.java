@@ -17,7 +17,7 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private long driver_id;
+    private long driverId;
     private String type;
     private String vehicle_brand;
     private String vehicle_model;
@@ -26,4 +26,5 @@ public class Vehicle {
     private boolean hasRadio;
     private boolean hasSunroof;
     private boolean hasWifi;
+    private int price_per_km;
 }
