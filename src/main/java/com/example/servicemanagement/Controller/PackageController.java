@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5000")
 @RequestMapping("/api/v1/package")
 public class PackageController {
 
@@ -33,16 +34,16 @@ public class PackageController {
         return ResponseEntity.ok(userPackage);
     }
 
-    
-    @GetMapping("/getAllPackages")
+
+    @GetMapping({"/getAllPackages/","/getAllPackages"})
     public ResponseEntity<List<Package>> getAllPackages() {
         List<Package> packages = packageService.getAllPackages();
         return ResponseEntity.ok(packages);
     }
 
     @GetMapping("/getAllActivePackages/{id}")
-    public ResponseEntity<List<Package>> getAllActivePackages(@PathVariable Long id) {
-        List<Package> packages = packageService.getAllPackages();
+    public ResponseEntity<Optional<Package>> getAllActivePackages(@PathVariable Long id) {
+        Optional<Package> packages = packageService.getAllPackagesById(id);
         return ResponseEntity.ok(packages);
     }
     

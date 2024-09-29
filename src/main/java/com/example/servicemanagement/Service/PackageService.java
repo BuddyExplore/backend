@@ -42,6 +42,9 @@ public class PackageService {
     public List<Package> getAllPackages() {
         return packageRepository.findAll();
     }
+    public Optional<Package> getAllPackagesById(Long id) {
+        return packageRepository.findById(id);
+    }
 
     public List<UserPackage> getAllActivePackages() {
         return userPackageRepository.findAllByStatus(true);
