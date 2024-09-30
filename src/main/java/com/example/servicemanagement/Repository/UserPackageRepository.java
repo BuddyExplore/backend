@@ -26,6 +26,6 @@ public interface UserPackageRepository extends JpaRepository<UserPackage, Long> 
     @Query("SELECT up FROM UserPackage up JOIN up.aPackage p WHERE up.status = true AND p.is_active = true")
     List<UserPackage> findActiveUserPackages();
     List<UserPackage> findByUserId(Long userId);
-    @Query("SELECT up FROM UserPackage up WHERE up.userId = :userId AND up.status = true")
+    @Query("SELECT up FROM UserPackage up JOIN FETCH up.aPackage p WHERE up.userId = :userId AND up.status = true")
     List<UserPackage> findActivePackagesByUserId(@Param("userId") Long userId);
 }
