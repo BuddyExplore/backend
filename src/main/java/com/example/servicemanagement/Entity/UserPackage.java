@@ -1,5 +1,6 @@
 package com.example.servicemanagement.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,8 +23,10 @@ public class UserPackage {
     // Foreign key relationship to Package entity
     @ManyToOne
     @JoinColumn(name = "package_id", referencedColumnName = "id")
+    @Getter
+    @Setter
+    @JsonManagedReference
     private Package aPackage;
-
 
     @Setter
     @Getter
@@ -36,6 +39,8 @@ public class UserPackage {
     @Setter
     @Getter
     private Date deactivation_date;
+
+
 
     // Custom getter for packageId
     public Long getPackageId() {

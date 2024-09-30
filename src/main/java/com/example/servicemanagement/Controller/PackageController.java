@@ -2,6 +2,7 @@ package com.example.servicemanagement.Controller;
 
 import com.example.servicemanagement.DTO.ActivePackageRequestDTO;
 import com.example.servicemanagement.DTO.PackageRequestDTO;
+import com.example.servicemanagement.DTO.UserPackageResponse;
 import com.example.servicemanagement.Entity.Package;
 import com.example.servicemanagement.Service.PackageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,9 +54,15 @@ public class PackageController {
 ////        System.out.println(packages.toString());
 //        return ResponseEntity.ok(packages);
 //    }
-    public ResponseEntity<List<UserPackage>> getAllActivePackages(@PathVariable Long id) {
+    public ResponseEntity<List<UserPackageResponse>> getAllActivePackages(@PathVariable Long id) {
         List<UserPackage> activePackages = packageService.getActivePackagesByUserId(id);
-        return ResponseEntity.ok(activePackages);
+
+        // Convert the list of UserPackage to a list of UserPackageResponse
+        List<UserPackageResponse> response = activePackages.stream()
+                .map(UserPackageResponse::new)
+                .toList();
+
+        return ResponseEntity.ok(response);
     }
 //    @PutMapping("/update/{id}")
 //    public ResponseEntity<UserPackage> updatePackage(@PathVariable Long id, @RequestBody PackageRequestDTO request) {

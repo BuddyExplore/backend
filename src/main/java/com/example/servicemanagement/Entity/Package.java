@@ -1,11 +1,13 @@
 package com.example.servicemanagement.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Package {
@@ -36,6 +38,8 @@ public class Package {
     @Setter
     @Getter
     private Date updated_at;
-
+    @OneToMany(mappedBy = "aPackage")
+    @JsonBackReference
+    private List<UserPackage> userPackages;
 
 }

@@ -51,6 +51,7 @@ public class PackageService {
         return userPackageRepository.findById(id);
     }
     public List<UserPackage> getActivePackagesByUserId(Long userId) {
+        System.out.println(userPackageRepository.findActivePackagesByUserId(userId));
         return userPackageRepository.findActivePackagesByUserId(userId);
     }
 
