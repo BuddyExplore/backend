@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public interface PackageRepository extends JpaRepository<Package, Long> {
     Optional<Package> findById(Long id);
+
 //    List<Package> findAllByStatus(boolean status);
 //    List<UserPackage> findAllByUserIdAndStatus(Long userId, boolean status);
 }
