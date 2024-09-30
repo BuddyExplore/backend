@@ -9,9 +9,14 @@ import org.springframework.http.ResponseEntity;
 import com.example.servicemanagement.Entity.UserPackage;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 import java.util.Optional;
 
+@Tag(name = "User Management Controller")
 @RestController
 @CrossOrigin(origins = "http://localhost:5000")
 @RequestMapping("/api/v1/package")
