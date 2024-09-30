@@ -41,12 +41,17 @@ public class PackageController {
         return ResponseEntity.ok(packages);
     }
 
-    @GetMapping("/getAllActivePackages/{id}")
-    public ResponseEntity<Optional<Package>> getAllActivePackages(@PathVariable Long id) {
-        Optional<Package> packages = packageService.getAllPackagesById(id);
-        return ResponseEntity.ok(packages);
+    @GetMapping("/getActivePackages/{id}")
+//    public ResponseEntity<Optional<UserPackage>> getAllActivePackages(@PathVariable Long id) {
+////        Optional<Package> packages = packageService.getAllPackagesById(id);
+//        Optional<UserPackage> packages = packageService.getAllPackagesById(id);
+////        System.out.println(packages.toString());
+//        return ResponseEntity.ok(packages);
+//    }
+    public ResponseEntity<List<UserPackage>> getAllActivePackages(@PathVariable Long id) {
+        List<UserPackage> activePackages = packageService.getActivePackagesByUserId(id);
+        return ResponseEntity.ok(activePackages);
     }
-    
 //    @PutMapping("/update/{id}")
 //    public ResponseEntity<UserPackage> updatePackage(@PathVariable Long id, @RequestBody PackageRequestDTO request) {
 //        UserPackage updatedPackage = packageService.updatePackage(id, request);
@@ -142,8 +147,8 @@ public class PackageController {
 //    }
 
     // Activate a package
-    @PostMapping("/activatePackage")
-    public ResponseEntity<String> activatePackage(@RequestParam Long userId, @RequestParam Long packageId) {
+    @PostMapping("/activatePackage/{packageId}")
+    public ResponseEntity<String> activatePackage(@RequestParam Long userId, @PathVariable("packageId") Long packageId) {
         ActivePackageRequestDTO request = new ActivePackageRequestDTO();
         request.setUserId(userId);
         request.setPackageId(packageId);
@@ -151,12 +156,12 @@ public class PackageController {
         return ResponseEntity.ok("Package activated successfully");
     }
 
-    @PostMapping("/deactivatePackage")
-    public ResponseEntity<String> deactivatePackage(@RequestParam Long userId, @RequestParam Long packageId) {
-        ActivePackageRequestDTO request = new ActivePackageRequestDTO();
-        request.setUserId(userId);
-        request.setPackageId(packageId);
-        packageService.deactivatePackage(request);
+    @DeleteMapping("/deactivatePackage/{id}")
+    public ResponseEntity<String> deactivatePackage(@PathVariable("id") Long packageId) {
+//        ActivePackageRequestDTO request = new ActivePackageRequestDTO();
+//        request.setUserId(userId);
+//        request.setPackageId(packageId);
+        packageService.deactivatePackage(packageId);
         return ResponseEntity.ok("Package deactivated successfully");
     }
 
