@@ -17,8 +17,8 @@ import org.springframework.context.annotation.Configuration;
                 version = "1.0",
                 description = "API documentation for the Sri Care Backend",
                 contact = @Contact(
-                        name = "Suruthi Manivannan",
-                        email = "suruthi0611@gmail.com"
+                        name = "Mohamed Shafraz",
+                        email = "shafraz3155@gmail.com"
                 ),
                 license = @License(
                         name = "GPL-3.0 license",
