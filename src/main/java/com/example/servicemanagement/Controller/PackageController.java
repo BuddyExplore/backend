@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.Optional;
 
-@Tag(name = "User Management Controller")
+@Tag(name = "Service Management Controller")
 @RestController
 @CrossOrigin(origins = "http://localhost:5000")
 @RequestMapping("/api/v1/package")
