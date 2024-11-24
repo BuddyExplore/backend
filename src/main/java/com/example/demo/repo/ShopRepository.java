@@ -8,7 +8,7 @@ import java.util.Optional;
 
 //@Repository
 public interface ShopRepository extends JpaRepository<Shop, Long> {
-    Optional<Shop> findById(Long id);
-
-    Shop getShopById(long id);
+//    Optional<Shop> findById(Long id);
+//
+//    Shop getShopById(long id);
 }

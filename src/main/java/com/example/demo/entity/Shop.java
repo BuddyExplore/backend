@@ -8,8 +8,6 @@ import lombok.*;
 @Table(name="Shops")
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
-@Getter
 @Data
 public class Shop {
     @Id
