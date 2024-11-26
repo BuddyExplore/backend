@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.ShopListDTO;
+import com.example.demo.dto.item.ItemListDTO;
+import com.example.demo.dto.shop.ShopDTO;
+import com.example.demo.dto.shop.ShopListDTO;
 import com.example.demo.entity.Shop;
 import com.example.demo.repo.ShopRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,8 +40,35 @@ public class ShopService {
                 .build();
     }
 
-    public Shop getShopById(long id) {
-        return shopRepository.findById(id).orElse(null);
+    public ShopDTO getShopById(long id) {
+
+         Shop shop = shopRepository.findById(id)
+                 .orElseThrow(() -> new RuntimeException("Item not found"));
+
+         ShopDTO shopDTO = new ShopDTO();
+         shopDTO.setId(shop.getId());
+         shopDTO.setName(shop.getName());
+         shopDTO.setAddress(shop.getAddress());
+         shopDTO.setCity(shop.getCity());
+         shopDTO.setDescription(shop.getDescription());
+         shopDTO.setPhone_no(shop.getPhone_no());
+         shopDTO.setEmail(shop.getEmail());
+         shopDTO.setCoverImage(shop.getCoverImage());
+         shopDTO.setRating(shop.getRating());
+
+         List<ItemListDTO> itemListDTOs = shop.getItems().stream().map(item -> {
+             ItemListDTO itemListDTO = new ItemListDTO();
+             itemListDTO.setId(item.getId());
+             itemListDTO.setName(item.getName());
+             itemListDTO.setPrice(item.getPrice());
+             itemListDTO.setPrice(item.getPrice());
+             itemListDTO.setItem_category(item.getItem_category());
+             itemListDTO.setIs_available(item.getIs_available());
+             return itemListDTO;
+         }).collect(Collectors.toList());
+
+        shopDTO.setItems(itemListDTOs);
+        return shopDTO;
     }
 
     public Shop addNewShop(Shop shop) {

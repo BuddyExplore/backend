@@ -1,7 +1,8 @@
 package com.example.demo.controller;
 
 
-import com.example.demo.dto.ItemDTO;
+import com.example.demo.dto.item.ItemDTO;
+import com.example.demo.dto.item.ItemRequestDTO;
 import com.example.demo.entity.Item;
 import com.example.demo.entity.Shop;
 import com.example.demo.repo.ShopRepository;
@@ -10,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/travel/item")
@@ -22,27 +21,11 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createItem(@RequestBody ItemDTO itemDTO) {
+    public ResponseEntity<?> createItem(@RequestBody ItemRequestDTO itemRequestDTO) {
         try {
             // Get the Shop object from the Shop ID
-            Shop shop = shopRepository.findById(itemDTO.getShop_id())
-                    .orElseThrow(() -> new RuntimeException("Shop not found"));
-
-            // Create a new Item and map it to the DTO
-            Item newItem = new Item();
-            newItem.setName(itemDTO.getName());
-            newItem.setPrice(itemDTO.getPrice());
-            newItem.setDescription(itemDTO.getDescription());
-            newItem.setPrice(itemDTO.getPrice());
-            newItem.setItem_count(itemDTO.getItem_count());
-            newItem.setItem_category(itemDTO.getItem_category());
-            newItem.setIs_available(itemDTO.getIs_available());
-            newItem.setShop(shop);
-
-            // Save the item
-            Item savedItem = itemService.saveItem(newItem);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedItem);
+            Item newItem = itemService.saveItem(itemRequestDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Item created successfully!");
         }catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error creating shop: " + e.getMessage());
@@ -76,23 +59,10 @@ public class ItemController {
 
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateItem(@PathVariable long id, @RequestBody ItemDTO itemDTO) {
+    public ResponseEntity<?> updateItem(@PathVariable long id, @RequestBody ItemRequestDTO itemRequestDTO) {
         try {
-            Item updatedItem = new Item();
-            updatedItem.setName(itemDTO.getName());
-            updatedItem.setPrice(itemDTO.getPrice());
-            updatedItem.setDescription(itemDTO.getDescription());
-            updatedItem.setPrice(itemDTO.getPrice());
-            updatedItem.setItem_count(itemDTO.getItem_count());
-            updatedItem.setItem_category(itemDTO.getItem_category());
-            updatedItem.setIs_available(itemDTO.getIs_available());
-            Shop shop = shopRepository.findById(itemDTO.getShop_id())
-                    .orElseThrow(() -> new RuntimeException("Shop not found"));
-            updatedItem.setShop(shop);
-
-            Item updatedItemEntity = itemService.updateItem(id, updatedItem);
-
-            return ResponseEntity.ok("Updated Successfully !");
+            Item updatedItem = itemService.updateItem(id, itemRequestDTO);
+            return ResponseEntity.ok("Item updated successfully!");
         }catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error updating shop: " + e.getMessage());

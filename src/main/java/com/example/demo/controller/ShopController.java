@@ -1,14 +1,12 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.shop.ShopDTO;
 import com.example.demo.entity.Shop;
 import com.example.demo.service.ShopService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/travel/shop")
@@ -30,9 +28,9 @@ public class ShopController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getShopById(@PathVariable long id) {
         try {
-            Shop shop = shopService.getShopById(id);
-            if (shop != null) {
-                return ResponseEntity.ok(shop);
+            ShopDTO shopDTO = shopService.getShopById(id);
+            if (shopDTO != null) {
+                return ResponseEntity.ok(shopDTO);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shop not found");
             }

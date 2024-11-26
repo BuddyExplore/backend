@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,11 +28,4 @@ public class Item {
     @ManyToOne
     @JoinColumn(name = "shop_id")  // Foreign key column in Item table
     private Shop shop;
-
-//    private long shop_id;
-
-//    @ManyToOne
-//    @JoinColumn(name = "shop_id")
-//    Shop shop;
-
 }
