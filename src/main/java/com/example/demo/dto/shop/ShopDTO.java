@@ -1,9 +1,12 @@
-package com.example.demo.dto;
+package com.example.demo.dto.shop;
 
+import com.example.demo.dto.item.ItemListDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -19,4 +22,5 @@ public class ShopDTO {
     private String email;
     private String coverImage;
     private int rating;
+    private List<ItemListDTO> items;
 }

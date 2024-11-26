@@ -1,5 +1,6 @@
-package com.example.demo.dto;
+package com.example.demo.dto.item;
 
+import com.example.demo.dto.shop.ShopOneDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,5 +19,5 @@ public class ItemDTO {
     private String item_category;
     private Boolean is_available;
 
-    private Long shop_id;
+    private ShopOneDTO shop;
 }

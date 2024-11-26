@@ -1,8 +1,13 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.ItemDTO;
+import com.example.demo.dto.item.ItemDTO;
+import com.example.demo.dto.item.ItemListDTO;
+import com.example.demo.dto.item.ItemRequestDTO;
+import com.example.demo.dto.shop.ShopOneDTO;
 import com.example.demo.entity.Item;
+import com.example.demo.entity.Shop;
 import com.example.demo.repo.ItemRepository;
+import com.example.demo.repo.ShopRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,34 +20,39 @@ import java.util.stream.Collectors;
 public class ItemService {
 
     private final ItemRepository itemRepository;
+    private final ShopRepository shopRepository;
 
-    public Item saveItem(Item item) {
+    public Item saveItem(ItemRequestDTO itemRequestDTO) {
+        Shop shop = shopRepository.findById(itemRequestDTO.getShopID())
+                .orElseThrow(() -> new RuntimeException("Shop not found"));
+
+        Item item = new Item();
+        item.setName(itemRequestDTO.getName());
+        item.setDescription(itemRequestDTO.getDescription());
+        item.setPrice(itemRequestDTO.getPrice());
+        item.setItem_count(itemRequestDTO.getItem_count());
+        item.setItem_category(itemRequestDTO.getItem_category());
+        item.setIs_available(itemRequestDTO.getIs_available());
+        item.setShop(shop);
+
         return itemRepository.save(item);
     }
 
-    public List<ItemDTO> getAllItems() {
+    public List<ItemListDTO> getAllItems() {
         List<Item> items = itemRepository.findAll();
 
         // Convert the list of Item entities to a list of ItemDTOs
         return items.stream()
                 .map(item -> {
-                    ItemDTO itemDTO = new ItemDTO();
-                    itemDTO.setName(item.getName());
-                    itemDTO.setPrice(item.getPrice());
-                    itemDTO.setDescription(item.getDescription());
-                    itemDTO.setPrice(item.getPrice());
-                    itemDTO.setItem_count(item.getItem_count());
-                    itemDTO.setItem_category(item.getItem_category());
-                    itemDTO.setIs_available(item.getIs_available());
+                    ItemListDTO itemListDTO = new ItemListDTO();
+                    itemListDTO.setId(item.getId());
+                    itemListDTO.setName(item.getName());
+                    itemListDTO.setPrice(item.getPrice());
+                    itemListDTO.setItem_category(item.getItem_category());
+                    itemListDTO.setIs_available(item.getIs_available());
 
-                    // Set only shopId (not the entire Shop object)
-                    if (item.getShop() != null) {
-                        itemDTO.setShop_id(item.getShop().getId());
-                    }
-
-                    return itemDTO;
-                })
-                .collect(Collectors.toList());
+                    return itemListDTO;
+                }).collect(Collectors.toList());
     }
 
     public ItemDTO getItemById(long id) {
@@ -50,6 +60,7 @@ public class ItemService {
                 .orElseThrow(() -> new RuntimeException("Item not found"));
 
         ItemDTO itemDTO = new ItemDTO();
+        itemDTO.setId(item.getId());
         itemDTO.setName(item.getName());
         itemDTO.setPrice(item.getPrice());
         itemDTO.setDescription(item.getDescription());
@@ -58,30 +69,41 @@ public class ItemService {
         itemDTO.setItem_category(item.getItem_category());
         itemDTO.setIs_available(item.getIs_available());
         if (item.getShop() != null) {
-            itemDTO.setShop_id(item.getShop().getId());
+            Shop shop  = item.getShop();
+            ShopOneDTO shopOneDTO = new ShopOneDTO();
+            shopOneDTO.setId(shop.getId());
+            shopOneDTO.setName(shop.getName());
+            shopOneDTO.setAddress(shop.getAddress());
+            shopOneDTO.setCity(shop.getCity());
+            shopOneDTO.setDescription(shop.getDescription());
+            shopOneDTO.setPhone_no(shop.getPhone_no());
+            shopOneDTO.setEmail(shop.getEmail());
+            shopOneDTO.setCoverImage(shop.getCoverImage());
+            shopOneDTO.setRating(shop.getRating());
+
+            itemDTO.setShop(shopOneDTO);
         }
 
         return itemDTO;
     }
 
     // Update an Item
-    public Item updateItem(Long itemId, Item updatedItem) {
-        Optional<Item> existingItemOptional = itemRepository.findById(itemId);
-        if (existingItemOptional.isPresent()) {
-            Item existingItem = existingItemOptional.get();
-            existingItem.setName(updatedItem.getName());
-            existingItem.setPrice(updatedItem.getPrice());
-            existingItem.setDescription(updatedItem.getDescription());
-            existingItem.setPrice(updatedItem.getPrice());
-            existingItem.setItem_count(updatedItem.getItem_count());
-            existingItem.setItem_category(updatedItem.getItem_category());
-            existingItem.setIs_available(updatedItem.getIs_available());
-            existingItem.setShop(updatedItem.getShop()); // if Shop is updated as well
+    public Item updateItem(Long id, ItemRequestDTO itemRequestDTO) {
+        Item existingItem = itemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Item not found"));
 
-            return itemRepository.save(existingItem);
-        } else {
-            throw new RuntimeException("Item not found");
-        }
+        Shop shop = shopRepository.findById(itemRequestDTO.getShopID())
+                .orElseThrow(() -> new RuntimeException("Shop not found"));
+
+        existingItem.setName(itemRequestDTO.getName());
+        existingItem.setDescription(itemRequestDTO.getDescription());
+        existingItem.setPrice(itemRequestDTO.getPrice());
+        existingItem.setItem_count(itemRequestDTO.getItem_count());
+        existingItem.setItem_category(itemRequestDTO.getItem_category());
+        existingItem.setIs_available(itemRequestDTO.getIs_available());
+        existingItem.setShop(shop);
+
+        return itemRepository.save(existingItem);
     }
 
     // Delete an Item
