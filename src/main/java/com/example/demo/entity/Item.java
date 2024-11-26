@@ -24,11 +24,14 @@ public class Item {
     private String item_category;
     private Boolean is_available;
 
-    private long shop_id;
+    @ManyToOne
+    @JoinColumn(name = "shop_id")  // Foreign key column in Item table
+    private Shop shop;
+
+//    private long shop_id;
 
 //    @ManyToOne
 //    @JoinColumn(name = "shop_id")
 //    Shop shop;
-
 
 }

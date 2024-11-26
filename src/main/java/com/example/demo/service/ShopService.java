@@ -1,10 +1,12 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.ShopListDTO;
 import com.example.demo.entity.Shop;
 import com.example.demo.repo.ShopRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,8 +16,25 @@ public class ShopService {
 
     private final ShopRepository shopRepository;
 
-    public List<Shop> getAllShops() {
-        return shopRepository.findAll();
+    public List<ShopListDTO> getAllShops() {
+        List<Shop> shops = shopRepository.findAll();
+        List<ShopListDTO> shopListDTOS = new ArrayList<>();
+
+        for(Shop shop: shops) {
+            ShopListDTO shopListDTO = convertToDTO(shop);
+            shopListDTOS.add(shopListDTO);
+        }
+
+        return shopListDTOS;
+    }
+
+    private ShopListDTO convertToDTO(Shop shop) {
+        return ShopListDTO.builder()
+                .id(shop.getId())
+                .name(shop.getName())
+                .city(shop.getCity())
+                .coverImage(shop.getCoverImage())
+                .build();
     }
 
     public Shop getShopById(long id) {
