@@ -32,7 +32,7 @@ public class UserService {
         return user.orElse(null);
     }
 
-    public User findById(String id) {
+    public User findById(Long id) {
         Optional<User> user = authUserRepository.findById(id);
         return user.orElse(null);
     }

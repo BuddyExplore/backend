@@ -1,4 +1,4 @@
-package com.example.hotelManagement.DTO;
+package com.example.demo.dto.room;
 
 
 import lombok.Getter;

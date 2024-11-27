@@ -4,33 +4,27 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "vehicle")
-@Data
+@Builder
+@Table(name="Vehicles")
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
 @Getter
-@Builder
+@Data
 public class Vehicle {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "vehicle_id")
-    private Long vehicleId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id", referencedColumnName = "owner_id")
-    private VehicleOwner owner;
-
-    @Column(name = "vehicle_type")
-    private String vehicleType;
-
-    @Column(name = "vehicle_capacity")
-    private Integer vehicleCapacity;
-
-    @Column(name = "vehicle_model")
-    private String vehicleModel;
-
-    @Column(name = "availability")
-    private Boolean availability;
+    private long driverId;
+    private String type;
+    private String vehicle_brand;
+    private String vehicle_model;
+    private String license_no;
+    private boolean hasAC;
+    private boolean hasRadio;
+    private boolean hasSunroof;
+    private boolean hasWifi;
+    private int price_per_km;
 }

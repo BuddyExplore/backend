@@ -55,3 +55,6 @@ test-classes/
 # Ignore other system files (optional)
 .DS_Store
 Thumbs.db
+
+# Ignore Static files
+custom-static/

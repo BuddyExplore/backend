@@ -1,4 +1,4 @@
-package com.example.hotelManagement.Entity;
+package com.example.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -6,10 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
-public class Hotel {
+public class Room {
 
         @Setter
         @Getter
@@ -22,24 +21,24 @@ public class Hotel {
         private String name;
         @Setter
         @Getter
-        private String address;
+        private double price;
         @Setter
         @Getter
         private String description;
         @Setter
         @Getter
-        private String phoneNumber;
+        private Integer validity_period;
         @Setter
         @Getter
-        private boolean isClosed;
+        private boolean is_active;
         @Setter
         @Getter
-        private byte stars;
-        @Setter
+        private Date created_at;
+        @ManyToOne
+        @JoinColumn(name = "Hotel_id", referencedColumnName = "id")
         @Getter
-        private Date addedDate;
-        @OneToMany(mappedBy = "aHotel")
+        @Setter
         @JsonManagedReference
-        private List<Room> roomList;
+        private Hotel aHotel;
 
 }

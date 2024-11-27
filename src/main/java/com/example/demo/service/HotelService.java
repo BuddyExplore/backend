@@ -1,4 +1,4 @@
-package com.example.hotelManagement.Service;
+package com.example.demo.service;
 
 import org.springframework.stereotype.Service;
 

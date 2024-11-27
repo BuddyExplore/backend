@@ -1,17 +1,15 @@
-package com.example.hotelManagement.Controller;
+package com.example.demo.controller;
+import com.example.demo.entity.Hotel;
+import com.example.demo.repo.HotelRepository;
+import com.example.demo.service.HotelService;
 
-import com.example.hotelManagement.Entity.Hotel;
-import com.example.hotelManagement.Repository.HotelRepository;
-import com.example.hotelManagement.Service.HotelService;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Hotel Management Controller")
 @RestController
 @RequestMapping("/api/v1/hotel")
 public class HotelController {
