@@ -13,11 +13,21 @@ target/
 .springBeans
 .sts4-cache
 
+# Ignore Maven wrapper files
+.mvn/
+mvnw
+mvnw.cmd
+
+#help file
+.HELP.md
+
 ### IntelliJ IDEA ###
 .idea
+../.idea/
 *.iws
 *.iml
 *.ipr
+
 
 ### NetBeans ###
 /nbproject/private/
@@ -31,3 +41,17 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Ignore compiled class files
+*.class
+
+# Ignore generated sources and test sources
+generated-sources/
+generated-test-sources/
+
+# Ignore test-classes
+test-classes/
+
+# Ignore other system files (optional)
+.DS_Store
+Thumbs.db
