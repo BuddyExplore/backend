@@ -21,8 +21,7 @@ public class HotelController {
 
     @GetMapping("/getAllHotelDetails")
     public List<Hotel> getAllHotelDetails() {
-        List<Hotel> hotelList = hotelRepository.findAll();
-        return hotelList;
+        return hotelRepository.findAll();
     }
 
 }

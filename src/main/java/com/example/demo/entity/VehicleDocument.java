@@ -30,7 +30,7 @@ public class VehicleDocument {
     @Column(name = "vehicle_revenue_document_pic")
     private String vehicleRevenueDocumentPic;
     @OneToOne
-    @JoinColumn(name = "vehicle_id", referencedColumnName = "vehicle_id")
+    @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
     private Vehicle vehicle;
     
 
