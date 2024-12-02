@@ -5,6 +5,8 @@ import com.example.demo.entity.VehicleBooking;
 import com.example.demo.service.VehicleBookingService;
 import com.example.demo.utils.VarList;
 import lombok.AllArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -87,6 +89,49 @@ public class VehicleBookingController {
             responseDTO.setMessage(e.getMessage());
             responseDTO.setContent(null);
             return ResponseEntity.ok(responseDTO);
+        }
+    }
+
+    @GetMapping(value = "/driverBookings/{driver_id}/{status}")
+    public ResponseEntity<ResponseDTO> getDriverBookingsByStatus(
+            @PathVariable Long driver_id, 
+            @PathVariable int status) {
+        try {
+            List<VehicleBooking> vehicleBookings = vehicleBookingService.getDriverBookingsByStatus(driver_id, status);
+            if (!vehicleBookings.isEmpty()) {
+                responseDTO.setCode(VarList.RSP_SUCCESS);
+                responseDTO.setMessage("Listing driver bookings");
+                responseDTO.setContent(vehicleBookings);
+            } else {
+                responseDTO.setCode(VarList.RSP_FAIL);
+                responseDTO.setMessage("No bookings found");
+                responseDTO.setContent(null);
+            }
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            responseDTO.setCode(VarList.RSP_ERROR);
+            responseDTO.setMessage(e.getMessage());
+            responseDTO.setContent(null);
+            return ResponseEntity.ok(responseDTO);
+        }
+    }
+
+    @PutMapping("/updateStatus/{booking_id}/{status}")
+    public ResponseEntity<ResponseDTO> updateBookingStatus(
+                                 @PathVariable Long booking_id, 
+                                 @PathVariable int status) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            VehicleBooking updatedBooking = vehicleBookingService.updateBookingStatus(booking_id, status);
+            responseDTO.setCode(VarList.RSP_SUCCESS);
+            responseDTO.setMessage("Booking status updated successfully");
+            responseDTO.setContent(updatedBooking);
+            return ResponseEntity.ok(responseDTO); 
+        } catch (Exception e) {
+            responseDTO.setCode(VarList.RSP_ERROR);
+            responseDTO.setMessage("Error occurred while updating booking status");
+            responseDTO.setContent(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
         }
     }
 

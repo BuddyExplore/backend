@@ -116,6 +116,30 @@ public class UserController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    @GetMapping("getUser/{userid}")
+    public ResponseEntity<ResponseDTO> findById(@PathVariable long userid) {
+
+        try {
+            User user = userService.findById(userid);
+
+            if(user != null) {
+                responseDTO.setCode(VarList.RSP_SUCCESS);
+                responseDTO.setMessage("User found");
+                responseDTO.setContent(user);
+            } else {
+                responseDTO.setCode(VarList.RSP_NO_DATA_FOUND);
+                responseDTO.setMessage("User not found");
+                responseDTO.setContent(null);
+            }
+        } catch (Exception e) {
+            responseDTO.setCode(VarList.RSP_NO_DATA_FOUND);
+            responseDTO.setMessage("Server Error");
+            responseDTO.setContent(null);
+        }
+
+        return ResponseEntity.ok(responseDTO);
+    }
+
 //    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/addUser")
     public ResponseEntity<ResponseDTO> addUser(@RequestBody User user) {

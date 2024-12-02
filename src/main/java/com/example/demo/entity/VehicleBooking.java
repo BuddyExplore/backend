@@ -31,5 +31,6 @@ public class VehicleBooking {
     private Time dropOffTime;
     private int passengers;
     private int distance;
+    private String fullName;
     private int status; // 0- pending, 1- Accepted, -1 - Canceled, 2,3,4,5.....
 }
