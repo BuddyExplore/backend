@@ -1,12 +1,22 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.shop.ShopDTO;
+import com.example.demo.dto.shop.ShopListDTO;
+import com.example.demo.dto.shop.ShopOneDTO;
 import com.example.demo.entity.Shop;
 import com.example.demo.service.ShopService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/travel/shop")
@@ -19,6 +29,18 @@ public class ShopController {
     public ResponseEntity<?> getAllShops() {
         try {
             return ResponseEntity.ok(shopService.getAllShops());
+        }catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching products: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/allShopsByOwnerID/{shopOwnerID}")
+    public ResponseEntity<?> getShopsByShopOwnerEmail(@PathVariable String shopOwnerID) {
+        try {
+            Long ownerID = Long.parseLong(shopOwnerID);
+            List<ShopListDTO> shops = shopService.getShopsByShopOwnerID(ownerID);
+            return ResponseEntity.ok(shops);
         }catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error fetching products: " + e.getMessage());
@@ -48,6 +70,76 @@ public class ShopController {
         } catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error creating shop: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerShop(
+            @RequestPart("name") String name,
+            @RequestPart("address") String address,
+            @RequestPart("city") String city,
+            @RequestPart("description") String description,
+            @RequestPart("phoneNo") String phoneNo,
+            @RequestPart("email") String email,
+            @RequestPart("shopOwnerID") String shopOwnerID,
+            @RequestPart("coverImage") MultipartFile coverImage,
+            @RequestPart("businessCertificate") MultipartFile businessCertificate) {
+
+        if (coverImage.isEmpty() || businessCertificate.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File is empty");
+        }
+
+        try {
+            // Define a base directory for uploads
+            String baseDir = "uploads/shop";
+            String baseDirBC = "uploads/shop/businessCertificate";
+
+            // Ensure the upload directory exists
+            Path uploadPath = Paths.get(baseDir);
+            Path uploadPathBC = Paths.get(baseDirBC);
+
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            if(!Files.exists(uploadPathBC)) {
+                Files.createDirectories(uploadPathBC);
+            }
+
+            // Generate a unique coverImage name to avoid conflicts
+            String coverImageName = coverImage.getOriginalFilename();
+            String uniqueCoverImageName = System.currentTimeMillis() + "_" + coverImageName;
+
+            String bcName = businessCertificate.getOriginalFilename();
+            String uniqueBcName = System.currentTimeMillis() + "_" + bcName;
+
+            // Define the full coverImage path
+            Path coverImagePath = uploadPath.resolve(uniqueCoverImageName);
+            Path businessCertificatePath = uploadPathBC.resolve(uniqueBcName);
+
+            // Save the coverImage
+            Files.copy(coverImage.getInputStream(), coverImagePath);
+            Files.copy(businessCertificate.getInputStream(), businessCertificatePath);
+            Shop shop = new Shop();
+            shop.setName(name);
+            shop.setAddress(address);
+            shop.setCity(city);
+            shop.setDescription(description);
+            shop.setPhone_no(phoneNo);
+            shop.setEmail(email);
+            shop.setShop_owner_id(Long.parseLong(shopOwnerID));
+            shop.setCoverImage(coverImagePath.toString().replace("\\", "/"));
+            shop.setBusinessCertificate(businessCertificatePath.toString().replace("\\", "/"));
+
+            Shop saveShop = shopService.registerShop(shop);
+            return ResponseEntity.status(HttpStatus.CREATED).body(saveShop);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to process shop creation");
         }
     }
 

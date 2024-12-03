@@ -23,9 +23,11 @@ public class Item {
     private float price;
     private int item_count;
     private String item_category;
+    private String cover_image;
     private Boolean is_available;
 
     @ManyToOne
     @JoinColumn(name = "shop_id")  // Foreign key column in Item table
+    @JsonBackReference
     private Shop shop;
 }

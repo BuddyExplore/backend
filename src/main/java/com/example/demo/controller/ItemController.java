@@ -2,15 +2,22 @@ package com.example.demo.controller;
 
 
 import com.example.demo.dto.item.ItemDTO;
+import com.example.demo.dto.item.ItemListDTO;
 import com.example.demo.dto.item.ItemRequestDTO;
 import com.example.demo.entity.Item;
-import com.example.demo.entity.Shop;
 import com.example.demo.repo.ShopRepository;
 import com.example.demo.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
 import java.util.List;
 
@@ -35,6 +42,84 @@ public class ItemController {
         }
     }
 
+    @PostMapping("/add")
+    public ResponseEntity<?> addItem(
+            @RequestPart("name") String name,
+            @RequestPart("description") String description,
+            @RequestPart("price") String price,
+            @RequestPart("itemCount") String itemCount,
+            @RequestPart("shopID") String shopID,
+            @RequestPart("category") String category,
+            @RequestPart("coverImage") MultipartFile coverImage) {
+
+        // Validate cover image
+        if (coverImage == null || coverImage.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cover image file is empty");
+        }
+
+        // Validate other inputs
+        try {
+            if (name == null || name.isBlank() ||
+                    description == null || description.isBlank() ||
+                    price == null || Float.parseFloat(price) <= 0 ||
+                    itemCount == null || Integer.parseInt(itemCount) < 0 ||
+                    shopID == null || Long.parseLong(shopID) <= 0 ||
+                    category == null || category.isBlank()) {
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Invalid input data");
+            }
+        } catch (NumberFormatException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid number format for price, item count, or shop ID");
+        }
+
+
+        try {
+            // Define a base directory for uploads
+            String baseDir = "uploads/item";
+            // Ensure the upload directory exists
+            Path uploadPath = Paths.get(baseDir);
+
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            // Generate a unique coverImage name to avoid conflicts
+            String coverImageName = coverImage.getOriginalFilename();
+            String uniqueCoverImageName = System.currentTimeMillis() + "_" + coverImageName;;
+
+            // Define the full coverImage path
+            Path coverImagePath = uploadPath.resolve(uniqueCoverImageName);
+
+            // Save the coverImage
+            Files.copy(coverImage.getInputStream(), coverImagePath);
+
+            Long shopIDLong = Long.parseLong(shopID);
+            Float priceFloat = Float.parseFloat(price);
+            int itemCountInt = Integer.parseInt(itemCount);
+
+            ItemRequestDTO itemRequestDTO = new ItemRequestDTO();
+            itemRequestDTO.setName(name);
+            itemRequestDTO.setDescription(description);
+            itemRequestDTO.setPrice(priceFloat);
+            itemRequestDTO.setItem_count(itemCountInt);
+            itemRequestDTO.setItem_category(category);
+            itemRequestDTO.setShopID(shopIDLong);
+            itemRequestDTO.setCover_image(coverImagePath.toString().replace("\\", "/"));
+            itemRequestDTO.setIs_available(true);
+
+            Item item = itemService.addItem(itemRequestDTO);
+            return ResponseEntity.ok(item);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to process item creation");
+        }
+    }
+
     @GetMapping("/allItems")
     public ResponseEntity<?> getAllItems() {
         try {
@@ -42,6 +127,19 @@ public class ItemController {
         }catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error fetching items: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/allItemsByShopID/{id}")
+    public ResponseEntity<?> getAllItemsByShopID(@PathVariable String id) {
+        try {
+            Long shopID = Long.parseLong(id);
+            List<ItemListDTO> items = itemService.getAllItemsByShopID(shopID);
+
+            return ResponseEntity.ok(items);
+        }catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching products: " + e.getMessage());
         }
     }
 
@@ -60,6 +158,33 @@ public class ItemController {
         }
     }
 
+    @GetMapping("itemOnly/{id}")
+    public ResponseEntity<?> getItemOnlyById(@PathVariable String id) {
+        try {
+            long itemID = Long.parseLong(id);
+            ItemDTO item = itemService.getItemOnlyById(itemID);
+            if(item != null) {
+                return ResponseEntity.ok(item);
+            }else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Item not found");
+            }
+        }catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching item: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("coverImage/{id}")
+    public ResponseEntity<?> getCoverImage(@PathVariable String id) {
+        try {
+            long itemID = Long.parseLong(id);
+            String cover = itemService.getCoverImage(itemID);
+            return ResponseEntity.ok(cover);
+        }catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching item: " + e.getMessage());
+        }
+    }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateItem(@PathVariable long id, @RequestBody ItemRequestDTO itemRequestDTO) {
@@ -69,6 +194,42 @@ public class ItemController {
         }catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error updating shop: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/updateCover/{id}")
+    public ResponseEntity<?> addItem(@PathVariable String id, @RequestPart("coverImage") MultipartFile coverImage) {
+
+        if (coverImage == null || coverImage.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cover image file is empty");
+        }
+
+        try {
+            String baseDir = "uploads/item";
+            Path uploadPath = Paths.get(baseDir);
+
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            String coverImageName = coverImage.getOriginalFilename();
+            String uniqueCoverImageName = System.currentTimeMillis() + "_" + coverImageName;;
+
+            Path coverImagePath = uploadPath.resolve(uniqueCoverImageName);
+            Files.copy(coverImage.getInputStream(), coverImagePath);
+
+            String cover = coverImagePath.toString().replace("\\", "/");
+            Long itemID = Long.parseLong(id);
+
+            String success = itemService.updateCoverImage(itemID, cover);
+            return ResponseEntity.ok(success);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to process item creation");
         }
     }
 

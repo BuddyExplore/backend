@@ -28,6 +28,7 @@ public class AuthController {
     @CrossOrigin(origins = "http://localhost:8081")
     @PostMapping("/login")
     public ResponseEntity<ResponseDTO> userLogin(@RequestBody LoginRequest loginRequest) {
+        System.out.println(loginRequest);
         return ResponseEntity.ok(authService.login(loginRequest));
     }
 
