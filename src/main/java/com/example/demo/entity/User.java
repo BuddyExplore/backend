@@ -5,10 +5,9 @@ import lombok.*;
 
 import java.util.Date;
 
-
 @Entity
 @Builder
-@Table(name="Users")
+@Table(name = "User")
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -33,6 +32,5 @@ public class User {
 
     @Builder.Default
     private Boolean deleted = false;
-
 
 }
