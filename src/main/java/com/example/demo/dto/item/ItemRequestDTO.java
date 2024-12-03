@@ -14,10 +14,11 @@ public class ItemRequestDTO {
     private long id;
     private String name;
     private String description;
-    private float price;
+    private Float price;
     private int item_count;
     private String item_category;
+    private String cover_image;
     private Boolean is_available;
 
-    private long shopID;
+    private Long shopID;
 }

@@ -18,5 +18,7 @@ public class ShopOneDTO {
     private String phone_no;
     private String email;
     private String coverImage;
+    private String businessCertificate;
+    private Long shop_owner_id;
     private int rating;
 }

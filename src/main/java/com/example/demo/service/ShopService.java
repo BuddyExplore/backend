@@ -3,7 +3,11 @@ package com.example.demo.service;
 import com.example.demo.dto.item.ItemListDTO;
 import com.example.demo.dto.shop.ShopDTO;
 import com.example.demo.dto.shop.ShopListDTO;
+import com.example.demo.dto.shop.ShopOneDTO;
 import com.example.demo.entity.Shop;
+import com.example.demo.entity.User;
+import com.example.demo.repo.AuthUserRepository;
+import com.example.demo.repo.ItemRepository;
 import com.example.demo.repo.ShopRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,7 @@ import java.util.stream.Collectors;
 public class ShopService {
 
     private final ShopRepository shopRepository;
+    private final ItemRepository itemRepository;
 
     public List<ShopListDTO> getAllShops() {
         List<Shop> shops = shopRepository.findAll();
@@ -31,12 +36,25 @@ public class ShopService {
         return shopListDTOS;
     }
 
+    public List<ShopListDTO> getShopsByShopOwnerID(Long shopOwnerID) {
+        List<Shop> shops = shopRepository.findShopsByShopOwnerID(shopOwnerID);
+        List<ShopListDTO> shopListDTOS = new ArrayList<>();
+
+        for(Shop shop: shops) {
+            ShopListDTO shopListDTO =  convertToDTO(shop);
+            shopListDTOS.add(shopListDTO);
+        }
+
+        return shopListDTOS;
+    }
+
     private ShopListDTO convertToDTO(Shop shop) {
         return ShopListDTO.builder()
                 .id(shop.getId())
                 .name(shop.getName())
                 .city(shop.getCity())
                 .coverImage(shop.getCoverImage())
+                .itemCount(itemRepository.getItemCountByShopID(shop.getId()))
                 .build();
     }
 
@@ -56,12 +74,12 @@ public class ShopService {
          shopDTO.setCoverImage(shop.getCoverImage());
          shopDTO.setRating(shop.getRating());
 
-         List<ItemListDTO> itemListDTOs = shop.getItems().stream().map(item -> {
+         List<ItemListDTO> itemListDTOs = itemRepository.findAllByShopID(shop.getId()).stream().map(item -> {
              ItemListDTO itemListDTO = new ItemListDTO();
              itemListDTO.setId(item.getId());
              itemListDTO.setName(item.getName());
              itemListDTO.setPrice(item.getPrice());
-             itemListDTO.setPrice(item.getPrice());
+             itemListDTO.setCover_image(item.getCover_image());
              itemListDTO.setItem_category(item.getItem_category());
              itemListDTO.setIs_available(item.getIs_available());
              return itemListDTO;
@@ -72,6 +90,10 @@ public class ShopService {
     }
 
     public Shop addNewShop(Shop shop) {
+        return shopRepository.save(shop);
+    }
+
+    public Shop registerShop(Shop shop) {
         return shopRepository.save(shop);
     }
 
