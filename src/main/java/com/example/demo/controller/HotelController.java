@@ -23,5 +23,4 @@ public class HotelController {
     public List<Hotel> getAllHotelDetails() {
         return hotelRepository.findAll();
     }
-
 }
