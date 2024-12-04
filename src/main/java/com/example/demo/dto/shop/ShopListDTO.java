@@ -14,4 +14,5 @@ public class ShopListDTO {
     private String name;
     private String city;
     private String coverImage;
+    private Integer itemCount;
 }
