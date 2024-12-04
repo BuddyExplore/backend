@@ -1,0 +1,30 @@
+services:
+  app:
+    image: openjdk:17-jdk-slim
+    container_name: springboot-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://root:neImXYTrEScjTpdOvbjEgkHpsrjDTbUo@autorack.proxy.rlwy.net:37895/railway
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: neImXYTrEScjTpdOvbjEgkHpsrjDTbUo
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: neImXYTrEScjTpdOvbjEgkHpsrjDTbUo
+      MYSQL_DATABASE: railway
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
