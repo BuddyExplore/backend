@@ -29,6 +29,11 @@ public class VehicleBookingService {
         return vehicles;
     }
 
+    public List<VehicleBooking> getTouristBookings(long touristId) {
+        List<VehicleBooking> vehicles = vehicleBookingRepository.findByTouristId(touristId);
+        return vehicles;
+    }
+
     public List<VehicleBooking> getDriverBookingsByStatus(Long driverId, int status) {
         return vehicleBookingRepository.findByDriverIdAndStatus(driverId, status);
     }

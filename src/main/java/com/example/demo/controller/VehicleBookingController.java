@@ -92,6 +92,30 @@ public class VehicleBookingController {
         }
     }
 
+    
+    @GetMapping(value = "/touristBookings/{tourist_id}")
+    public ResponseEntity<ResponseDTO> getTouristBookings(@PathVariable Long tourist_id) {
+        try {
+            List<VehicleBooking> vehicleBookings = vehicleBookingService.getTouristBookings(tourist_id);
+            if (!vehicleBookings.isEmpty()) {
+                responseDTO.setCode(VarList.RSP_SUCCESS);
+                responseDTO.setMessage("Listing driver bookings");
+                responseDTO.setContent(vehicleBookings);
+            } else {
+                responseDTO.setCode(VarList.RSP_FAIL);
+                responseDTO.setMessage("No bookings found");
+                responseDTO.setContent(null);
+            }
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            responseDTO.setCode(VarList.RSP_ERROR);
+            responseDTO.setMessage(e.getMessage());
+            responseDTO.setContent(null);
+            return ResponseEntity.ok(responseDTO);
+        }
+    }
+
+
     @GetMapping(value = "/driverBookings/{driver_id}/{status}")
     public ResponseEntity<ResponseDTO> getDriverBookingsByStatus(
             @PathVariable Long driver_id, 

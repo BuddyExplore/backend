@@ -15,5 +15,7 @@ public interface VehicleBookingRepository extends JpaRepository<VehicleBooking, 
 
     List<VehicleBooking> findByDriverId(Long driverId);
 
+    List<VehicleBooking> findByTouristId(Long touristId);
+
     List<VehicleBooking> findByDriverIdAndStatus(Long driverId, int status);
 }
