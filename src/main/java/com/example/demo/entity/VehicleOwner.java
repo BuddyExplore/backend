@@ -18,7 +18,7 @@ public class VehicleOwner {
     @Column(name = "owner_id")
     private String ownerId;
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "id", referencedColumnName = "id")
     private User user;
     @Enumerated(EnumType.STRING)
     private Province province;
