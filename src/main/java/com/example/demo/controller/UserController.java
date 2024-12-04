@@ -189,6 +189,20 @@ public class UserController {
 
         return ResponseEntity.ok(responseDTO);
     }
+    @GetMapping("/availability/{id}")
+    public ResponseEntity<ResponseDTO> getAvailability(@PathVariable long id) {
+        User userobj = userService.findById(id);
+        ResponseDTO responseDTO = new ResponseDTO();
+        responseDTO.setCode(VarList.RSP_SUCCESS);
+        responseDTO.setMessage("User found");
+        responseDTO.setContent(userobj.getEnabled());
+        return ResponseEntity.ok(responseDTO);
+    }
 
+    @PutMapping("/availability")
+    public ResponseEntity<Boolean> updateAvailability(@PathVariable boolean availability) {
+        availability = availability;
+        return ResponseEntity.ok(availability);
+    }
 }
 

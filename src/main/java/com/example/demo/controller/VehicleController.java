@@ -3,6 +3,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.ResponseDTO;
 import com.example.demo.entity.Vehicle;
+import com.example.demo.entity.VehicleBreakdown;
 import com.example.demo.service.VehicleService;
 import com.example.demo.utils.VarList;
 import lombok.AllArgsConstructor;
@@ -91,5 +92,76 @@ public class VehicleController {
             return ResponseEntity.ok(responseDTO);
         }
     }
+    @GetMapping(value = "/vehicleBreakdowns")
+    public ResponseEntity<ResponseDTO> getAllVehicleBreakdowns() {
+        try {
+            List<VehicleBreakdown> vehicleBreakdownList = vehicleService.getAllVehicleBreakdowns();
+            if(!vehicleBreakdownList.isEmpty()) {
+                responseDTO.setCode(VarList.RSP_SUCCESS);
+                responseDTO.setMessage("Listing vehicles breakdowns");
+                responseDTO.setContent(vehicleBreakdownList);
+            } else {
+                responseDTO.setCode(VarList.RSP_FAIL);
+                responseDTO.setMessage("No vehicle breakdowns found");
+                responseDTO.setContent(null);
+            }
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            responseDTO.setCode(VarList.RSP_ERROR);
+            responseDTO.setMessage(e.getMessage());
+            responseDTO.setContent(null);
+            return ResponseEntity.ok(responseDTO);
+        }
+    }
 
+    @PostMapping(value = "/addVehicleBreakdowns")
+    public ResponseEntity<ResponseDTO> addNewVehicleBreakdown(@RequestBody VehicleBreakdown vehicleBreakdown) {
+        if(vehicleBreakdown == null) {
+            responseDTO.setCode(VarList.RSP_NOT_AUTHORISED);
+            responseDTO.setMessage("Empty vehicle object");
+            responseDTO.setContent(null);
+        }
+        else{
+            try {
+                String message = vehicleService.addNewVehicleBreakdown(vehicleBreakdown);
+                if(message != "Vehicle Breakdown added") {
+                    responseDTO.setCode(VarList.RSP_FAIL);
+                    responseDTO.setMessage(message);
+                    responseDTO.setContent(null);
+                }
+                else {
+                    responseDTO.setCode(VarList.RSP_FAIL);
+                    responseDTO.setMessage(message);
+                    responseDTO.setContent(null);
+                }
+            } catch (Exception e) {
+                responseDTO.setCode(VarList.RSP_ERROR);
+                responseDTO.setMessage(e.getMessage());
+                responseDTO.setContent(null);
+            }
+        }
+        System.out.println(responseDTO.getMessage());
+        return ResponseEntity.ok(responseDTO);
+    }
+    @GetMapping(value = "/vehicleBreakdowns/{vehicle_id}")
+    public ResponseEntity<ResponseDTO> getAllVehicleBreakdownsByID(@RequestParam Long vehicle_id) {
+        try {
+            List<VehicleBreakdown> vehicleBreakdownList = vehicleService.getAllVehicleBreakdownsByDriverId(vehicle_id);
+            if(!vehicleBreakdownList.isEmpty()) {
+                responseDTO.setCode(VarList.RSP_SUCCESS);
+                responseDTO.setMessage("Listing vehicles breakdowns");
+                responseDTO.setContent(vehicleBreakdownList);
+            } else {
+                responseDTO.setCode(VarList.RSP_FAIL);
+                responseDTO.setMessage("No vehicle breakdowns found");
+                responseDTO.setContent(null);
+            }
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            responseDTO.setCode(VarList.RSP_ERROR);
+            responseDTO.setMessage(e.getMessage());
+            responseDTO.setContent(null);
+            return ResponseEntity.ok(responseDTO);
+        }
+    }
 }
