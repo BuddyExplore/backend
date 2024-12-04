@@ -18,14 +18,14 @@ public class TourGuideController {
     @Autowired
     private TourGuideService tourGuideService;
 
-    @GetMapping
+    @GetMapping("/getAllTourGuides")
     public ResponseEntity<List<TourGuide>> getAllTourGuides() {
         return ResponseEntity.ok(tourGuideService.getAllTourGuides());
     }
 
-    @PostMapping
-    public ResponseEntity<TourGuide> addTourGuide(@RequestBody TourGuide tourGuide) {
-        return ResponseEntity.ok(tourGuideService.addTourGuide(tourGuide));
+    @PostMapping("/addTourGuides/{id}")
+    public ResponseEntity<TourGuide> addTourGuide(@RequestParam int tourGuideId) {
+        return ResponseEntity.ok(tourGuideService.addTourGuide(tourGuideId));
     }
 
     @PostMapping("/{id}/trips")

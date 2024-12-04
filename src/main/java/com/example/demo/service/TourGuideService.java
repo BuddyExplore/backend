@@ -24,7 +24,8 @@ public class TourGuideService {
         return tourGuideRepository.findAll();
     }
 
-    public TourGuide addTourGuide(TourGuide tourGuide) {
+    public TourGuide addTourGuide(long id) {
+        TourGuide tourGuide = tourGuideRepository.findById(id);
         return tourGuideRepository.save(tourGuide);
     }
 

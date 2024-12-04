@@ -91,7 +91,6 @@ public class UserController {
         }
     }
 
-
     @GetMapping("/{email}")
     public ResponseEntity<ResponseDTO> findByEmail(@PathVariable String email) {
 
