@@ -2,10 +2,7 @@
 FROM openjdk:17-jdk-slim
 
 # Specify the location of the JAR file as a build argument
-ARG JAR_FILE=target/userService-0.0.1-SNAPSHOT.jar.jar
-
-# Copy the Spring Boot JAR file into the container
-COPY ${JAR_FILE} app.jar
+COPY target/userService-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose the application port (default Spring Boot port is 8080)
 EXPOSE 8080
