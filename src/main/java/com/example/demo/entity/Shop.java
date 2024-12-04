@@ -16,7 +16,7 @@ import java.util.List;
 public class Shop {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String address;
@@ -24,11 +24,13 @@ public class Shop {
     private String description;
     private String phone_no;
     private String email;
-    private String password;
     private String coverImage;
+    private String businessCertificate;
+    private Long shop_owner_id;
     private int rating;
 
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Item> items = new ArrayList<>();
 }
 

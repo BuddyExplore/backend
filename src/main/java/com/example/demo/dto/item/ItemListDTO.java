@@ -14,5 +14,6 @@ public class ItemListDTO {
     private String name;
     private float price;
     private String item_category;
+    private String cover_image;
     private Boolean is_available;
 }

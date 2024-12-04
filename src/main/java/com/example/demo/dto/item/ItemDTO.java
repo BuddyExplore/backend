@@ -17,6 +17,7 @@ public class ItemDTO {
     private float price;
     private int item_count;
     private String item_category;
+    private String cover_image;
     private Boolean is_available;
 
     private ShopOneDTO shop;
