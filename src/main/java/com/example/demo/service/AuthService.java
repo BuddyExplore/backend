@@ -103,8 +103,6 @@ public class AuthService {
                throw new Exception("Email already exists");
            }
 
-            //user.setUsername(user.getEmail());
-            //user.setDisplayName(user.getFirstname().concat(" ").concat(user.getLastname()));
             user.setPassword(passwordEncoder.encode(user.getPassword()));
 
             authRepository.save(user);
